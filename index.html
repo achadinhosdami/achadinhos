@@ -5,24 +5,25 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Achadinhos</title>
   <style>
-
+    /* ====== IMAGEM DO PRODUTO (thumb) ====== */
     .thumb{
-  width:100%;
-  height:170px;
-  border-radius:14px;
-  border:1px solid rgba(255,255,255,.10);
-  background: rgba(0,0,0,.20);
-  overflow:hidden;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-.thumb img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  display:block;
-}
+      width:100%;
+      height:170px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.20);
+      overflow:hidden;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .thumb img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+
     :root{
       --bg:#0b1020;
       --muted:#a9b2d6;
@@ -195,6 +196,7 @@
   // 3) Preencha:
   //    - name: nome do produto
   //    - url: link do produto (ou link de afiliado)
+  //    - image: caminho da imagem (opcional) -> exemplo: "images/foto.jpg"
   //    - price: preço (opcional)
   //    - category: categoria (ex.: "Casa", "Eletrônicos")
   //    - desc: observação curta (opcional)
@@ -206,19 +208,10 @@
   // - As pessoas só vão ver os itens que você deixou aqui.
   // ============================================================
   const PRODUCTS = [
-    // EXEMPLOS — substitua pelos seus:
-    { name: "PDRN PINK EXOSOME SHOT SERUM 7500 30ml", url: "https://amzn.to/3Ojr7YE", image: "images/pdrn.jgp", price: "R$ 99,90", category: "Saúde", desc: "Bom para pele", createdAt: "2026-02-11" },
-    { name: "SKIN1004 - CENTELLA LIGHT CLEANSING OIL 200ML", url: "https://amzn.to/3OcsIj1", price: "R$ 29,90", category: "Carro", desc: "Deixa a mesa limpa", createdAt: "2026-02-11" },
-    { name: "Escova Secadora Britânia Soft 4 em 1 1300W BEC07R Bivolt", url: "https://amzn.to/4aL66Pi", price: "R$ 59,90", category: "Casa", desc: "Automação com Alexa Google", createdAt: "2026-02-11" },
-
-    // MODELO PARA COPIAR:
-    // { name: "Nome do produto", url: "https://...", price: "R$ 0,00", category: "Categoria", desc: "Observação", createdAt: "2026-02-11" },
+    { name: "PDRN PINK EXOSOME SHOT SERUM 7500 30ml", url: "https://amzn.to/3Ojr7YE", image: "images/pdrn.jpg", price: "R$ 99,90", category: "Saúde", desc: "Bom para pele", createdAt: "2026-02-11" },
+    { name: "SKIN1004 - CENTELLA LIGHT CLEANSING OIL 200ML", url: "https://amzn.to/3OcsIj1", image: "", price: "R$ 29,90", category: "Beleza", desc: "Óleo de limpeza leve", createdAt: "2026-02-11" },
+    { name: "Escova Secadora Britânia Soft 4 em 1 1300W BEC07R Bivolt", url: "https://amzn.to/4aL66Pi", image: "", price: "R$ 59,90", category: "Casa", desc: "Escova secadora 4 em 1", createdAt: "2026-02-11" },
   ];
-
-  // ============================================================
-  // A partir daqui é o "código do site".
-  // Você não precisa mexer (a não ser que queira personalizar).
-  // ============================================================
 
   const els = {
     grid: document.getElementById("grid"),
@@ -236,7 +229,6 @@
   }
 
   function parseDate(s){
-    // Espera o formato YYYY-MM-DD
     const ok = /^\d{4}-\d{2}-\d{2}$/.test(s || "");
     const m = ok ? s : "1970-01-01";
     return new Date(m + "T00:00:00Z").getTime();
@@ -253,6 +245,7 @@
     const items = PRODUCTS.map(p => ({
       name: (p.name || "").trim(),
       url: (p.url || "").trim(),
+      image: (p.image || "").trim(), // ✅ CARREGA O CAMPO image (corrigido)
       price: (p.price || "").trim(),
       category: (p.category || "").trim(),
       desc: (p.desc || "").trim(),
@@ -278,8 +271,8 @@
 
     els.grid.innerHTML = filtered.map(i => `
       <article class="card">
-  ${i.image ? `<div class="thumb"><img src="${escapeHtml(i.image)}" alt="${escapeHtml(i.name)}"></div>` : ""}
-  <div class="topline">
+        ${i.image ? `<div class="thumb"><img src="${escapeHtml(i.image)}" alt="${escapeHtml(i.name)}"></div>` : ""}
+        <div class="topline">
           <span class="tag">${escapeHtml(i.category || "Sem categoria")}</span>
           <span class="price">${escapeHtml(i.price || "")}</span>
         </div>
