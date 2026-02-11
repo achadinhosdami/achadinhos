@@ -1,0 +1,422 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Achadinhos</title>
+  <style>
+    :root{
+      --bg:#0b1020;
+      --card:#121a33;
+      --muted:#a9b2d6;
+      --text:#eef1ff;
+      --accent:#6ea8fe;
+      --border:rgba(255,255,255,.08);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: radial-gradient(1200px 700px at 20% -10%, rgba(110,168,254,.22), transparent 60%),
+                  radial-gradient(900px 600px at 90% 10%, rgba(124,92,255,.18), transparent 55%),
+                  var(--bg);
+      color:var(--text);
+    }
+    header{
+      padding:28px 16px 14px;
+      max-width:1100px;
+      margin:0 auto;
+      display:flex;
+      gap:14px;
+      align-items:flex-start;
+      justify-content:space-between;
+      flex-wrap:wrap;
+    }
+    .brand h1{margin:0;font-size:26px;letter-spacing:.2px}
+    .brand p{margin:6px 0 0;color:var(--muted);max-width:640px}
+    .toolbar{
+      display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:flex-end;
+    }
+    .btn{
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      border:1px solid var(--border);
+      padding:10px 12px;
+      border-radius:12px;
+      cursor:pointer;
+      font-weight:600;
+    }
+    .btn:hover{border-color:rgba(110,168,254,.55)}
+    .btn.primary{
+      background: linear-gradient(135deg, rgba(110,168,254,.95), rgba(124,92,255,.95));
+      border: none;
+    }
+    main{max-width:1100px;margin:0 auto;padding:0 16px 40px}
+    .panel{
+      background: rgba(255,255,255,.04);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:14px;
+      margin: 10px 0 18px;
+      display:grid;
+      gap:12px;
+    }
+    .row{
+      display:grid;
+      grid-template-columns: 1.2fr 1.6fr .7fr .8fr;
+      gap:10px;
+    }
+    @media (max-width: 900px){
+      .row{grid-template-columns:1fr}
+    }
+    label{font-size:12px;color:var(--muted);display:block;margin:0 0 6px 2px}
+    input, textarea, select{
+      width:100%;
+      padding:11px 12px;
+      border-radius:12px;
+      border:1px solid var(--border);
+      background: rgba(0,0,0,.25);
+      color: var(--text);
+      outline:none;
+    }
+    textarea{min-height:40px;resize:vertical}
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap:12px;
+    }
+    @media (max-width: 980px){ .grid{grid-template-columns:repeat(2,1fr)} }
+    @media (max-width: 640px){ .grid{grid-template-columns:1fr} }
+    .card{
+      background: rgba(255,255,255,.04);
+      border: 1px solid var(--border);
+      border-radius:18px;
+      padding:14px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      min-height: 170px;
+    }
+    .topline{
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+    }
+    .tag{
+      font-size:12px;
+      padding:6px 10px;
+      border:1px solid var(--border);
+      border-radius:999px;
+      color: var(--muted);
+    }
+    .title{font-size:16px;margin:0;line-height:1.25}
+    .desc{margin:0;color:var(--muted);font-size:13px;line-height:1.35}
+    .price{font-weight:800;font-size:16px}
+    .actions{
+      margin-top:auto;
+      display:flex; gap:10px; align-items:center; justify-content:space-between;
+    }
+    a.link{
+      text-decoration:none;
+      color: var(--text);
+      background: rgba(110,168,254,.14);
+      border:1px solid rgba(110,168,254,.35);
+      padding:10px 12px;
+      border-radius:12px;
+      font-weight:700;
+      text-align:center;
+      flex: 1;
+    }
+    a.link:hover{border-color:rgba(110,168,254,.7)}
+    .iconbtn{
+      width:42px;height:42px;border-radius:12px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      cursor:pointer;
+      font-size:18px;
+    }
+    .iconbtn:hover{border-color: rgba(255,90,90,.55)}
+    footer{
+      max-width:1100px;margin:0 auto;padding:0 16px 28px;color:var(--muted);
+      font-size:12px;
+    }
+    .searchbar{
+      display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+    }
+    .hint{opacity:.9}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <h1>🛒 Achadinhos</h1>
+      <p>Minha lista de produtos com links organizados. Adicione itens, categorize e compartilhe esta página.</p>
+    </div>
+    <div class="toolbar">
+      <button class="btn" id="exportBtn">Exportar JSON</button>
+      <button class="btn" id="importBtn">Importar JSON</button>
+      <button class="btn primary" id="addDemoBtn">Adicionar exemplos</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="panel">
+      <div class="row">
+        <div>
+          <label for="name">Nome do produto</label>
+          <input id="name" placeholder="Ex.: Echo Dot 5ª geração" />
+        </div>
+        <div>
+          <label for="url">Link do produto</label>
+          <input id="url" placeholder="Cole aqui o link da Amazon (ou qualquer link)" />
+        </div>
+        <div>
+          <label for="price">Preço (opcional)</label>
+          <input id="price" placeholder="Ex.: R$ 199,90" />
+        </div>
+        <div>
+          <label for="category">Categoria</label>
+          <input id="category" placeholder="Ex.: Casa, Eletrônicos, Cuidados" />
+        </div>
+      </div>
+      <div class="row" style="grid-template-columns: 1fr .25fr;">
+        <div>
+          <label for="desc">Observação (opcional)</label>
+          <textarea id="desc" placeholder="Ex.: bom custo-benefício / vale a pena em promoção"></textarea>
+        </div>
+        <div style="display:flex;align-items:flex-end;">
+          <button class="btn primary" id="addBtn" style="width:100%;">Adicionar</button>
+        </div>
+      </div>
+
+      <div class="searchbar">
+        <div style="flex:1;min-width:240px;">
+          <label for="search">Buscar</label>
+          <input id="search" placeholder="Digite para filtrar por nome/categoria..." />
+        </div>
+        <div style="min-width:220px;">
+          <label for="filterCat">Filtrar por categoria</label>
+          <select id="filterCat">
+            <option value="">Todas</option>
+          </select>
+        </div>
+        <div style="min-width:160px;">
+          <label for="sort">Ordenar</label>
+          <select id="sort">
+            <option value="new">Mais recentes</option>
+            <option value="old">Mais antigos</option>
+            <option value="az">Nome (A–Z)</option>
+            <option value="za">Nome (Z–A)</option>
+          </select>
+        </div>
+      </div>
+      <div class="hint">💾 Seus itens ficam salvos neste navegador (localStorage).</div>
+    </section>
+
+    <section class="grid" id="grid"></section>
+  </main>
+
+  <footer>
+    Dica: para compartilhar online, publique este arquivo em GitHub Pages/Netlify/Vercel. Se quiser, eu te guio no método mais simples.
+  </footer>
+
+<script>
+  const LS_KEY = "achadinhos_items_v1";
+
+  const els = {
+    name: document.getElementById("name"),
+    url: document.getElementById("url"),
+    price: document.getElementById("price"),
+    category: document.getElementById("category"),
+    desc: document.getElementById("desc"),
+    addBtn: document.getElementById("addBtn"),
+    grid: document.getElementById("grid"),
+    search: document.getElementById("search"),
+    filterCat: document.getElementById("filterCat"),
+    sort: document.getElementById("sort"),
+    exportBtn: document.getElementById("exportBtn"),
+    importBtn: document.getElementById("importBtn"),
+    addDemoBtn: document.getElementById("addDemoBtn"),
+  };
+
+  function loadItems(){
+    try{ return JSON.parse(localStorage.getItem(LS_KEY) || "[]"); }
+    catch{ return []; }
+  }
+  function saveItems(items){
+    localStorage.setItem(LS_KEY, JSON.stringify(items));
+  }
+
+  function uniq(arr){ return [...new Set(arr.filter(Boolean))]; }
+
+  function normalizeUrl(u){
+    const s = (u || "").trim();
+    if(!s) return "";
+    if(!/^https?:\/\//i.test(s)) return "https://" + s;
+    return s;
+  }
+
+  function upsertCategories(items){
+    const cats = uniq(items.map(i => i.category)).sort((a,b)=>a.localeCompare(b));
+    const current = els.filterCat.value;
+    els.filterCat.innerHTML = '<option value="">Todas</option>' + cats.map(c => `<option>${escapeHtml(c)}</option>`).join("");
+    if(cats.includes(current)) els.filterCat.value = current;
+  }
+
+  function escapeHtml(str){
+    return (str || "").replace(/[&<>"']/g, (m) => ({
+      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+    }[m]));
+  }
+
+  function render(){
+    let items = loadItems();
+
+    const q = els.search.value.trim().toLowerCase();
+    const cat = els.filterCat.value;
+
+    let filtered = items.filter(i => {
+      const hay = `${i.name} ${i.category} ${i.desc}`.toLowerCase();
+      const okQ = !q || hay.includes(q);
+      const okC = !cat || i.category === cat;
+      return okQ && okC;
+    });
+
+    const sort = els.sort.value;
+    if(sort === "new") filtered.sort((a,b)=>b.createdAt - a.createdAt);
+    if(sort === "old") filtered.sort((a,b)=>a.createdAt - b.createdAt);
+    if(sort === "az") filtered.sort((a,b)=>a.name.localeCompare(b.name));
+    if(sort === "za") filtered.sort((a,b)=>b.name.localeCompare(a.name));
+
+    upsertCategories(items);
+
+    els.grid.innerHTML = filtered.map(i => `
+      <article class="card">
+        <div class="topline">
+          <span class="tag">${escapeHtml(i.category || "Sem categoria")}</span>
+          <span class="price">${escapeHtml(i.price || "")}</span>
+        </div>
+        <h3 class="title">${escapeHtml(i.name || "Sem nome")}</h3>
+        <p class="desc">${escapeHtml(i.desc || "")}</p>
+        <div class="actions">
+          <a class="link" href="${escapeHtml(i.url)}" target="_blank" rel="noopener">Abrir</a>
+          <button class="iconbtn" title="Remover" aria-label="Remover" onclick="removeItem('${i.id}')">🗑️</button>
+        </div>
+      </article>
+    `).join("");
+
+    if(filtered.length === 0){
+      els.grid.innerHTML = `<div class="card"><h3 class="title">Nada por aqui ainda…</h3><p class="desc">Adicione seus links acima e eles aparecerão organizados.</p></div>`;
+    }
+  }
+
+  function addItem(){
+    const name = els.name.value.trim();
+    const url = normalizeUrl(els.url.value);
+    const price = els.price.value.trim();
+    const category = els.category.value.trim();
+    const desc = els.desc.value.trim();
+
+    if(!name || !url){
+      alert("Preencha pelo menos o NOME e o LINK do produto.");
+      return;
+    }
+
+    const items = loadItems();
+    items.push({
+      id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(16).slice(2),
+      name, url, price, category, desc,
+      createdAt: Date.now()
+    });
+
+    saveItems(items);
+
+    els.name.value = "";
+    els.url.value = "";
+    els.price.value = "";
+    els.category.value = "";
+    els.desc.value = "";
+
+    render();
+  }
+
+  window.removeItem = function(id){
+    const items = loadItems().filter(i => i.id !== id);
+    saveItems(items);
+    render();
+  }
+
+  function exportJson(){
+    const data = JSON.stringify(loadItems(), null, 2);
+    const blob = new Blob([data], {type:"application/json"});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "achadinhos.json";
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+
+  function importJson(){
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "application/json";
+    input.onchange = () => {
+      const file = input.files[0];
+      if(!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try{
+          const items = JSON.parse(reader.result);
+          if(!Array.isArray(items)) throw new Error("Formato inválido");
+          const fixed = items.map(i => ({
+            id: i.id || (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(16).slice(2)),
+            name: (i.name || "").trim(),
+            url: normalizeUrl(i.url || ""),
+            price: (i.price || "").trim(),
+            category: (i.category || "").trim(),
+            desc: (i.desc || "").trim(),
+            createdAt: i.createdAt || Date.now()
+          })).filter(i => i.name && i.url);
+
+          saveItems(fixed);
+          render();
+        }catch(e){
+          alert("Não consegui importar esse JSON. Verifique o arquivo.");
+        }
+      };
+      reader.readAsText(file);
+    };
+    input.click();
+  }
+
+  function addDemo(){
+    const items = loadItems();
+    const demo = [
+      {name:"Fone Bluetooth", url:"https://www.amazon.com.br/", price:"R$ 99,90", category:"Eletrônicos", desc:"Bom para trabalho e calls"},
+      {name:"Organizador de Cabos", url:"https://www.amazon.com.br/", price:"R$ 29,90", category:"Casa", desc:"Deixa a mesa limpa"},
+      {name:"Lâmpada Smart", url:"https://www.amazon.com.br/", price:"R$ 59,90", category:"Casa", desc:"Automação com Alexa/Google"}
+    ];
+    demo.forEach(d => items.push({
+      id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(16).slice(2),
+      ...d,
+      createdAt: Date.now()
+    }));
+    saveItems(items);
+    render();
+  }
+
+  els.addBtn.addEventListener("click", addItem);
+  els.search.addEventListener("input", render);
+  els.filterCat.addEventListener("change", render);
+  els.sort.addEventListener("change", render);
+  els.exportBtn.addEventListener("click", exportJson);
+  els.importBtn.addEventListener("click", importJson);
+  els.addDemoBtn.addEventListener("click", addDemo);
+
+  [els.name, els.url, els.price, els.category].forEach(el => {
+    el.addEventListener("keydown", (e)=>{ if(e.key==="Enter") addItem(); });
+  });
+
+  render();
+</script>
+</body>
+</html>
